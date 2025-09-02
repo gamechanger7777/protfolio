@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex Rivera | Creative Developer & AI Engineer</title>
+
+    <!-- EXTERNAL ASSETS (Approved) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* ------------------- */
+        /* --- CSS RESET & DEFAULTS --- */
+        /* ------------------- */
+        :root {
+            --bg-dark: #000000;
+            --bg-light: #0a0a0a;
+            --accent-cyan: #00fffc;
+            --accent-magenta: #ff00ff;
+            --text-light: #ffffff;
+            --text-dark: rgba(255, 255, 255, 0.7);
+            --scroll-behavior: smooth;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: var(--scroll-behavior);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            cursor: none;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+        }
+
+        p {
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        section {
+            min-height: 100vh;
+            padding: 100px 15%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ------------------- */
+        /* --- CUSTOM CURSOR --- */
+        /* ------------------- */
+        .cursor {
+            width: 25px;
+            height: 25px;
+            border: 2px solid var(--accent-cyan);
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+            z-index: 9999;
+        }
+
+        .cursor.grow {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(0, 255, 252, 0.2);
+            border-color: var(--accent-magenta);
+        }
+
+        /* ------------------- */
+        /* --- SIDEBAR NAV --- */
+        /* ------------------- */
+        .sidebar-nav {
+            position: fixed;
+            top: 50%;
+            right: 30px;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin: 15px 0;
+            text-align: right;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: color 0.3s ease;
+        }
+
+        .sidebar-nav a .nav-text {
+            opacity: 0;
+            transform: translateX(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        .sidebar-nav a .nav-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--text-dark);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-nav a:hover .nav-text,
+        .sidebar-nav a.active .nav-text {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .sidebar-nav a:hover .nav-dot,
+        .sidebar-nav a.active .nav-dot {
+            transform: scale(1.8);
+            background-color: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
+
+        /* ------------------- */
+        /* --- HERO SECTION --- */
+        /* ------------------- */
+        #hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(-45deg, #000000, #0a0a0a, #1a1a1a, #000000);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            z-index: 1;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero-headline {
+            font-size: 6vw;
+            color: var(--text-light);
+            line-height: 1.1;
+        }
+
+        .hero-headline .char {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(50px) scale(0.8);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-top: 20px;
+            opacity: 0; /* For animation */
+        }
+
+        /* ------------------- */
+        /* --- GLASSMORPHISM CARD --- */
+        /* ------------------- */
+        .glass-card {
+            background: rgba(10, 10, 10, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            border: 1px solid transparent;
+            background-clip: padding-box;
+            border-image: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta)) 1;
+            position: relative;
+        }
+
+        /* ------------------- */
+        /* --- CONTENT SECTIONS --- */
+        /* ------------------- */
+        #about, #skills, #projects, #contact {
+            background-color: var(--bg-dark);
+            padding-top: 150px;
+            padding-bottom: 150px;
+        }
+
+        .section-heading {
+            font-size: 3rem;
+            margin-bottom: 60px;
+            color: var(--accent-cyan);
+        }
+
+        /* About Section */
+        #about .glass-card p {
+            max-width: 800px;
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .skill-item {
+            text-align: center;
+        }
+
+        .skill-item i {
+            font-size: 4rem;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        
+        .skill-item:hover i {
+            transform: scale(1.1) rotate(5deg);
+            color: var(--accent-magenta);
+        }
+
+        .skill-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .project-card {
+            /* Inherits from .glass-card but with specific transform styles */
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .project-card h3 {
+            color: var(--accent-cyan);
+            margin-bottom: 15px;
+        }
+
+        .project-tags {
+            margin: 20px 0;
+        }
+
+        .project-tags span {
+            background: var(--bg-light);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .project-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .project-link i {
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .project-link:hover i {
+            transform: translateX(5px);
+        }
+
+        /* Contact Section */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            background: var(--bg-light);
+            border: 1px solid var(--text-dark);
+            border-radius: 5px;
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+        }
+
+        .submit-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+            border: none;
+            border-radius: 5px;
+            color: var(--bg-dark);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: none;
+            transition: transform 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* ------------------- */
+        /* --- ANIMATIONS & RESPONSIVE --- */
+        /* ------------------- */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 100px 5%;
+            }
+            .hero-headline {
+                font-size: 10vw;
+            }
+            .sidebar-nav {
+                right: 15px;
+            }
+            .sidebar-nav a .nav-text {
+                display: none; /* Hide text on mobile for cleaner look */
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar-nav">
+        <ul>
+            <li><a href="#hero" class="nav-link active"><span class="nav-text">Home</span><span class="nav-dot"></span></a></li>
+            <li><a href="#about" class="nav-link"><span class="nav-text">About</span><span class="nav-dot"></span></a></li>
+            <li><a href="#skills" class="nav-link"><span class="nav-text">Skills</span><span class="nav-dot"></span></a></li>
+            <li><a href="#projects" class="nav-link"><span class="nav-text">Projects</span><span class="nav-dot"></span></a></li>
+            <li><a href="#contact" class="nav-link"><span class="nav-text">Contact</span><span class="nav-dot"></span></a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero">
+            <h1 class="hero-headline">
+                <!-- Text will be populated by JS -->
+            </h1>
+            <p class="hero-subtitle">Creative Developer & AI Engineer</p>
+        </section>
+
+        <!-- About Section -->
+        <section id="about">
+            <div class="glass-card animate-on-scroll">
+                <h2 class="section-heading">About Me</h2>
+                <p>I am a digital artisan at the intersection of artificial intelligence and creative design. My passion lies in crafting unique, human-centered experiences that are not only visually stunning but also intelligent and intuitive. I believe in blending the logical precision of code with the boundless possibilities of art to build the future of the web.</p>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills">
+            <h2 class="section-heading animate-on-scroll">My Toolkit</h2>
+            <div class="skills-grid">
+                <div class="skill-item animate-on-scroll" style="transition-delay: 100ms;">
+                    <i class="fab fa-python"></i>
+                    <h3>Python</h3>
+                    <p>Machine Learning, Automation</p>
+                </div>
+                <div class="skill-item animate-on-scroll" style="transition-delay: 200ms;">
+                    <i class="fab fa-js-square"></i>
+                    <h3>JavaScript</h3>
+                    <p>Advanced Interactions, GSAP</p>
+                </div>
+                <div class="skill-item animate-on-scroll" style="transition-delay: 300ms;">
+                    <i class="fab fa-react"></i>
+                    <h3>React / Next.js</h3>
+                    <p>Modern Web Applications</p>
+                </div>
+                <div class="skill-item animate-on-scroll" style="transition-delay: 400ms;">
+                    <i class="fas fa-brain"></i>
+                    <h3>TensorFlow</h3>
+                    <p>Deep Learning Models</p>
+                </div>
+                <div class="skill-item animate-on-scroll" style="transition-delay: 500ms;">
+                    <i class="fab fa-figma"></i>
+                    <h3>UI/UX Design</h3>
+                    <p>Prototyping & Visuals</p>
+                </div>
+                <div class="skill-item animate-on-scroll" style="transition-delay: 600ms;">
+                    <i class="fas fa-cube"></i>
+                    <h3>Three.js</h3>
+                    <p>3D Web Experiences</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects">
+            <h2 class="section-heading animate-on-scroll">Featured Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card glass-card animate-on-scroll" data-tilt>
+                    <h3>Project Cygnus</h3>
+                    <p>An interactive 3D data visualization of stellar nurseries, built with Three.js and real astronomical data.</p>
+                    <div class="project-tags">
+                        <span>Three.js</span><span>GSAP</span><span>Data Viz</span>
+                    </div>
+                    <a href="#" class="project-link interactive">Explore <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="project-card glass-card animate-on-scroll" data-tilt style="transition-delay: 200ms;">
+                    <h3>AI Art Generator</h3>
+                    <p>A web-based tool that uses a custom-trained GAN to generate unique abstract art from user text prompts.</p>
+                    <div class="project-tags">
+                        <span>TensorFlow.js</span><span>React</span><span>AI</span>
+                    </div>
+                    <a href="#" class="project-link interactive">Generate <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="project-card glass-card animate-on-scroll" data-tilt style="transition-delay: 400ms;">
+                    <h3>Brutalist OS</h3>
+                    <p>A concept for a minimalist operating system UI, focusing on raw functionality and stark aesthetics.</p>
+                    <div class="project-tags">
+                        <span>UI/UX</span><span>Figma</span><span>Brutalism</span>
+                    </div>
+                    <a href="#" class="project-link interactive">View Concept <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <h2 class="section-heading animate-on-scroll">Get In Touch</h2>
+            <form class="contact-form animate-on-scroll">
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="Your Name" class="interactive" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Your Email" class="interactive" required>
+                </div>
+                <div class="form-group">
+                    <textarea name="message" rows="5" placeholder="Your Message" class="interactive" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn interactive">Send Message</button>
+            </form>
+        </section>
+    </main>
+
+    <!-- EXTERNAL SCRIPTS (Approved) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- SMOOTH SCROLLING FOR SIDEBAR ---
+        // This is handled by CSS `scroll-behavior: smooth;` but GSAP can provide more control if needed.
+        // For this project, native CSS is sufficient and performant.
+
+        // --- CUSTOM CURSOR ---
+        const cursor = document.querySelector('.cursor');
+        const interactiveElements = document.querySelectorAll('a, button, .interactive');
+
+        window.addEventListener('mousemove', e => {
+            gsap.to(cursor, { duration: 0.2, x: e.clientX, y: e.clientY });
+        });
+
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
+        });
+
+        // --- HERO SPLIT-TEXT ANIMATION ---
+        const heroHeadline = document.querySelector('.hero-headline');
+        const heroSubtitle = document.querySelector('.hero-subtitle');
+        const headlineText = "Alex Rivera";
+        headlineText.split('').forEach(char => {
+            const span = document.createElement('span');
+            span.className = 'char';
+            span.textContent = char === ' ' ? ' ' : char; // Handle spaces
+            heroHeadline.appendChild(span);
+        });
+
+        gsap.timeline()
+            .to('.char', {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                stagger: 0.05,
+                ease: 'back.out(1.7)',
+                duration: 1
+            })
+            .to(heroSubtitle, {
+                opacity: 1,
+                duration: 1
+            }, "-=0.5");
+
+        // --- PARALLAX HERO BACKGROUND ---
+        gsap.to('#hero', {
+            backgroundPosition: '50% 100%',
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '#hero',
+                start: 'top top',
+                end: 'bottom top',
+                scrub: true
+            }
+        });
+
+        // --- INTERSECTION OBSERVER FOR SCROLL ANIMATIONS ---
+        const scrollElements = document.querySelectorAll('.animate-on-scroll');
+
+        const elementObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        scrollElements.forEach(el => {
+            elementObserver.observe(el);
+        });
+        
+        // --- SIDEBAR ACTIVE STATE ON SCROLL ---
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.sidebar-nav a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 60) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+
+        // --- 3D TILT INITIALIZATION ---
+        VanillaTilt.init(document.querySelectorAll(".project-card"), {
+            max: 15,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.2,
+            perspective: 1000
+        });
+        
+        // --- Disable native smooth scroll if GSAP is preferred ---
+        // document.documentElement.style.scrollBehavior = 'auto';
+        // navLinks.forEach(link => {
+        //     link.addEventListener('click', (e) => {
+        //         e.preventDefault();
+        //         let target = document.querySelector(link.getAttribute('href'));
+        //         gsap.to(window, {duration: 1.5, scrollTo: target, ease: 'power2.inOut'});
+        //     });
+        // });
+
+    });
+    </script>
+
+</body>
+</html>
